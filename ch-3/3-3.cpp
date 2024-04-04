@@ -46,7 +46,7 @@ int main()
                     count++;
                 }
             }
-            cout << "The word " << words[i] << " appears " << count
+            cout << "The word '" << words[i] << "' appears " << count
                  << " time(s)." << endl;
         }
     }
