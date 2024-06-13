@@ -8,4 +8,4 @@ project(MyProject VERSION 1.0
                   DESCRIPTION "Koenig's Accelerated C++ Chapter 4"
                   LANGUAGES CXX)
 
-add_executable(chap4 4-1.cpp grade.cpp median.cpp Student_info.cpp)
+add_executable(chap4.out main.cpp grade.cpp median.cpp Student_info.cpp)
