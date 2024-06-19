@@ -7,7 +7,7 @@ Consider these 2 pages:
 
 These might yield a KWIC index as follows:
 
-| Phrase | | | Page |
+| Phrase (left side) | Index | Phrase (right side) | Page |
 | --- | --- | --- | ---|
 | KWIC is an | **acronym** | for Key Word In Context, ... | 1 |
 | ... Key Word In Context, the most | **common** | format for concordance lines. | 1 |
@@ -25,6 +25,8 @@ These might yield a KWIC index as follows:
 
 A Permuted Index Page lists the Permuted Indices (in **bold text**), sorted in alphabetical order for ease of lookup. Nice thing about a Permuted Index Page is that it allows us not only to find out quickly where the Permuted Index (a.k.a Key Word in Context (KWIC)) “word” is with respect to the article, it also exposes some texts one the left and right of the Permuted Index.
 
+**Note** that the *Index* is in alphbetical order.
+
 ## Exercise 5.1 in the book
 
 We are given the following example
@@ -33,7 +35,7 @@ We are given the following example
 To better explain the output (credit: [Johnny Chan](http://mathalope.co.uk/2014/08/26/accelerated-c-solution-to-exercise-5-1/))
 ![Permuted index page for example given in the exercise](img/exercise-visualized.png)
 
-The Permuted Index Page listed above is the output of my C++ program. “Block 1” and “Block 2” essentially are what the Author asks us to produce. “Block 3” and “Block 4” are the “extras”
+The Permuted Index Page listed above is the output of the C++ program. “Block 1” and “Block 2” essentially are what the Author asks us to produce. “Block 3” and “Block 4” are the “extras”
 
 To be able to use this output (a Permuted Index Page), we first need to know that the first words of “Block 2” are the Permuted Indices. i.e. the red bold words in the picture!
 
