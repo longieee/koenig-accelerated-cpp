@@ -10,6 +10,12 @@ using std::vector;
 
 using std::isspace;
 
+/**
+ * Splits a string into a vector of substrings based on whitespace characters.
+ *
+ * @param s The string to be split.
+ * @return A vector of substrings.
+ */
 vector<string> split(const string& s)
 {
     vector<string> ret;

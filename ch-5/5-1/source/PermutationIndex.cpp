@@ -1,3 +1,8 @@
+/**
+ * @file PermutationIndex.cpp
+ * @brief Implementation file for the PermutationIndex class.
+ */
+
 #include "../header/PermutationIndex.h"
 
 #include "../header/split.h"
@@ -11,6 +16,14 @@ using std::istream;
 using std::string;
 using std::vector;
 
+/**
+ * Reads the contents of a page from the input stream and stores each line in a
+ * vector.
+ *
+ * @param is The input stream to read from.
+ * @param page The name of the page being read.
+ * @return A vector containing all the lines of the page.
+ */
 vector<string> read_page(istream& is, string page)
 {
     string line;
@@ -24,6 +37,12 @@ vector<string> read_page(istream& is, string page)
     return all_lines;
 }
 
+/**
+ * Splits the raw page into lines and assigns line numbers to each line.
+ *
+ * @param page The raw page to be split.
+ * @return A vector of Line objects, each representing a line of the page.
+ */
 vector<Line> split_raw_page(vector<string>& page)
 {
     vector<string>::iterator iter = page.begin();
@@ -70,6 +89,13 @@ vector<string> rotate(const vector<string>& v, int idx)
     return rotated;
 }
 
+/**
+ * Creates all possible permutations of words in a line.
+ *
+ * @param line The line to create permutations for.
+ * @return A vector of WordPermutation objects, each representing a word
+ * permutation in the line.
+ */
 vector<WordPermutation> create_permutations(const Line& line)
 {
     vector<WordPermutation> permutes;
