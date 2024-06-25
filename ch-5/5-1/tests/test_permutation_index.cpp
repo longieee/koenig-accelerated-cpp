@@ -1,5 +1,6 @@
 #include "../header/PermutationIndex.h"
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -7,6 +8,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::istream;
+using std::sort;
 using std::string;
 using std::vector;
 
@@ -64,6 +66,29 @@ int main()
         {
             printline(iter_perm->text);
             cout << iter_perm->index_word << endl;
+            iter_perm++;
+        }
+        iter_lines++;
+    }
+
+    // Print out sorted permutation indexes
+    cout << endl;
+    cout << "Sorted:" << endl;
+    iter_lines = lines.begin();
+    while (iter_lines != lines.end())
+    {
+        sort(permutations.begin(), permutations.end(), compare);
+        cout << "Line number " << iter_lines->line_number << ": " << endl;
+        vector<WordPermutation>::iterator iter_perm = permutations.begin();
+        while (iter_perm != permutations.end())
+        {
+            cout << "Left: ";
+            printline(iter_perm->left_text, false);
+            cout << "Index: ";
+            cout << iter_perm->index_word << endl;
+            cout << "Right: ";
+            printline(iter_perm->right_text, false);
+            cout << "-------" << endl;
             iter_perm++;
         }
         iter_lines++;
