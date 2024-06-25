@@ -16,9 +16,7 @@ set(CMAKE_CXX_STANDARD 11)
 include_directories(${PROJECT_SOURCE_DIR}/header)
 
 # Add the executable
-file(GLOB TEST_SOURCES "tests/test_permutation_index.cpp")
 file(GLOB SOURCE_FILES "source/*.cpp")
-add_executable(test_permutation_index ${TEST_SOURCES} ${SOURCE_FILES})
 
-# Link the Google Test libraries
-target_link_libraries(test_permutation_index)
+add_executable(create_permutation_index "main.cpp" ${SOURCE_FILES})
+target_link_libraries(create_permutation_index)
