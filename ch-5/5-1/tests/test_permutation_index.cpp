@@ -33,14 +33,12 @@ void printline(const vector<string>& s, bool print_separator = false)
 
 int main()
 {
-
-    string s;
     vector<string> page;
     vector<Line> lines;
     vector<WordPermutation> permutations;
 
     cout << "Page content:" << endl;
-    page = read_page(cin, s);
+    page = read_page(cin);
     lines = split_raw_page(page);
 
     vector<Line>::iterator iter_lines = lines.begin();
