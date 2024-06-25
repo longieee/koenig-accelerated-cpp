@@ -17,6 +17,7 @@ using std::vector;
 
 int main()
 {
+
     vector<string> page;
     vector<Line> lines;
     vector<WordPermutation> all_permutations;
@@ -46,6 +47,7 @@ int main()
     // Step 3: Display in correct format
     vector<string> left_text_col, index_word_col, right_text_col, word_num_col,
         word_line_col;
+
     // 3.1 Read each column content
     vector<WordPermutation>::iterator iter_perm = all_permutations.begin();
     while (iter_perm != all_permutations.end())
@@ -55,6 +57,7 @@ int main()
         right_text_col.push_back(read_column(iter_perm->right_text));
         word_num_col.push_back(to_string(iter_perm->word_number));
         word_line_col.push_back(to_string(iter_perm->line_number));
+        iter_perm++;
     }
 
     // 3.2 Framing
