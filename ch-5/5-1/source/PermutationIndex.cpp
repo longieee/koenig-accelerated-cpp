@@ -4,15 +4,15 @@
  */
 
 #include "../header/PermutationIndex.h"
-
 #include "../header/split.h"
-#include <iostream>
+
 #include <istream>
 #include <string>
 #include <vector>
 
 using std::getline;
 using std::istream;
+using std::min;
 using std::string;
 using std::vector;
 
@@ -21,10 +21,9 @@ using std::vector;
  * vector.
  *
  * @param is The input stream to read from.
- * @param page The name of the page being read.
  * @return A vector containing all the lines of the page.
  */
-vector<string> read_page(istream& is, string page)
+vector<string> read_page(istream& is)
 {
     string line;
     vector<string> all_lines;
@@ -112,6 +111,11 @@ vector<WordPermutation> create_permutations(const Line& line)
         perm.line_number = line.line_number;
         perm.word_number = rotation_idx;
 
+        // Get the surrounding texts of the index_word
+        perm.left_text = slice(line.text, 0, rotation_idx);
+        perm.right_text = slice(line.text, rotation_idx + 1,
+                                static_cast<int>(line.text.size()));
+
         permutes.push_back(perm);
 
         // Next permutation
@@ -120,4 +124,87 @@ vector<WordPermutation> create_permutations(const Line& line)
     }
 
     return permutes;
+}
+
+/**
+ * Compares two WordPermutation objects based on their index_word,
+ * line_number, and word_number.
+ *
+ * @param x The first WordPermutation object to compare.
+ * @param y The second WordPermutation object to compare.
+ * @return true if x is less than y, false otherwise.
+ */
+bool compare(const WordPermutation& x, const WordPermutation& y)
+{
+    if (x.index_word < y.index_word)
+    {
+        return true;
+    }
+    // For the same word, we prioritize the line number
+    else if (x.index_word == y.index_word)
+    {
+        if (x.line_number < y.line_number)
+        {
+            return true;
+        }
+        // For the same line, we prioritize the words appearing first
+        else if (x.line_number == y.line_number)
+        {
+            // No 2 words on the same line have the same word_number
+            return x.word_number < y.word_number;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+/**
+ * Returns a sliced vector of strings from the given vector.
+ *
+ * @param v The vector of strings to be sliced.
+ * @param start The starting index of the slice.
+ * @param end The ending index of the slice.
+ * @return A sliced vector of strings from the given vector.
+ */
+vector<string> slice(const vector<string>& v, int start, int end)
+{
+    vector<string> ret;
+
+    typedef vector<string>::const_iterator iter;
+    // Ensure the start and end positions are within the vector's range
+    iter start_it = v.begin() + min(start, static_cast<int>(v.size()));
+    iter end_it = v.begin() + min(end, static_cast<int>(v.size()));
+
+    // Constructing the sliced vector from start_it to end_it by copying the
+    // items
+    ret = vector<string>(start_it, end_it);
+
+    return ret;
+}
+
+/**
+ * Reads the content of a column from a vector of strings and returns it as a
+ * single string.
+ *
+ * @param v The vector of strings representing the column.
+ * @return The content of the column as a single string.
+ */
+string read_column(const vector<string>& v)
+{
+    string column_content;
+    vector<string>::const_iterator iter = v.begin();
+
+    while (iter != v.end())
+    {
+        column_content += (*iter + ' ');
+        iter++;
+    }
+
+    return column_content;
 }
