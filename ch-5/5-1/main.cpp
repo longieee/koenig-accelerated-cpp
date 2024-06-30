@@ -12,7 +12,7 @@ using std::endl;
 using std::istream;
 using std::sort;
 using std::string;
-using std::to_string;
+
 using std::vector;
 
 int main()
@@ -24,6 +24,7 @@ int main()
 
     cout << "Page content:" << endl;
     cout << "-------------" << endl;
+    cout << endl;
 
     // Step 1: Read the whole page and get all permutations
     page = read_page(cin);
@@ -45,36 +46,24 @@ int main()
     sort(all_permutations.begin(), all_permutations.end(), compare);
 
     // Step 3: Display in correct format
-    vector<string> left_text_col, index_word_col, right_text_col, word_num_col,
-        word_line_col;
 
-    // 3.1 Read each column content
-    vector<WordPermutation>::iterator iter_perm = all_permutations.begin();
-    while (iter_perm != all_permutations.end())
-    {
-        left_text_col.push_back(read_column(iter_perm->left_text));
-        index_word_col.push_back(iter_perm->index_word);
-        right_text_col.push_back(read_column(iter_perm->right_text));
-        word_num_col.push_back(to_string(iter_perm->word_number));
-        word_line_col.push_back(to_string(iter_perm->line_number));
-        iter_perm++;
-    }
+    // Step 3.1: Create a Permutation Table struct that contains each column as
+    // a vector of strings.
+    // Also include headers for the columns
+    PermutationTable table = create_permutation_table(all_permutations);
 
-    // 3.2 Framing
-    vector<string> left_text_frame = frame(left_text_col),
-                   index_word_frame = frame(index_word_col),
-                   right_text_frame = frame(right_text_col),
-                   word_num_frame = frame(word_num_col),
-                   word_line_frame = frame(word_line_col);
-
-    // 3.3 Concatenate for final display
+    // Step 3.2 Concatenate for final display
     vector<string> disp;
-    disp = hcat(left_text_frame, index_word_frame);
-    disp = hcat(disp, right_text_frame);
-    disp = hcat(disp, word_num_frame);
-    disp = hcat(disp, word_line_frame);
+    disp = hcat(table.left_text_frame, table.index_word_frame);
+    disp = hcat(disp, table.right_text_frame);
+    disp = hcat(disp, table.word_num_frame);
+    disp = hcat(disp, table.word_line_frame);
 
     // 3.4 Print out final result
+
+    cout << endl;
+    cout << "Permutaiton Index:" << endl;
+    cout << endl;
     for (vector<string>::size_type i = 0; i != disp.size(); ++i)
     {
         cout << disp[i] << endl;
