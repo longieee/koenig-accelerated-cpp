@@ -1,7 +1,9 @@
 #include "../header/frame.h"
+#include <stdexcept>
 #include <string>
 #include <vector>
 
+using std::domain_error;
 using std::max;
 using std::string;
 using std::vector;
@@ -18,11 +20,26 @@ string::size_type width(const vector<string>& v)
     return max_len;
 }
 
-vector<string> frame(const vector<string>& v)
+/**
+ * @brief Function to produce a framed text
+ *
+ * @param v The vector of strings to produce a frame for
+ * @param border_char The character of the border
+ * @param align_side The texts will be aligned to the left or right, according
+ * to this option
+ * @param padding The width of padding between the text and the borders
+ */
+vector<string> frame(const vector<string>& v, const string align_side = "left",
+                     const int padding = 4)
 {
+    if (align_side != "left" && align_side != "right")
+    {
+        throw domain_error("align_side must be one of [left, right]");
+    }
+
     vector<string> ret;
     string::size_type maxlen = width(v);
-    string border(maxlen + 4, '*');
+    string border(maxlen + padding, '*');
 
     // write the top border
     ret.push_back(border);
@@ -30,7 +47,61 @@ vector<string> frame(const vector<string>& v)
     // write each interior row, bordered by an asterisk and a space
     for (vector<string>::size_type i = 0; i != v.size(); ++i)
     {
-        ret.push_back("* " + v[i] + string(maxlen - v[i].size(), ' ') + " *");
+        if (align_side == "left")
+        {
+            ret.push_back("  " + v[i] + string(maxlen - v[i].size(), ' ') +
+                          "  ");
+        }
+        else if (align_side == "right")
+        {
+            ret.push_back("  " + string(maxlen - v[i].size(), ' ') + v[i] +
+                          "  ");
+        }
+    }
+
+    // write the bottom border
+    ret.push_back(border);
+
+    return ret;
+}
+
+/**
+ * @brief Function to produce a framed text
+ *
+ * @param v The vector of strings to produce a frame for
+ * @param border_char The character of the border
+ * @param align_side The texts will be aligned to the left or right, according
+ * to this option
+ * @param padding The width of padding between the text and the borders
+ */
+vector<string> frame(const vector<string>& v, const char border_char,
+                     const string align_side = "left", const int padding = 4)
+{
+    if (align_side != "left" && align_side != "right")
+    {
+        throw domain_error("align_side must be one of [left, right]");
+    }
+
+    vector<string> ret;
+    string::size_type maxlen = width(v);
+    string border(maxlen + padding, '*');
+
+    // write the top border
+    ret.push_back(border);
+
+    // write each interior row, bordered by an asterisk and a space
+    for (vector<string>::size_type i = 0; i != v.size(); ++i)
+    {
+        if (align_side == "left")
+        {
+            ret.push_back("* " + v[i] + string(maxlen - v[i].size(), ' ') +
+                          " *");
+        }
+        else if (align_side == "right")
+        {
+            ret.push_back("* " + string(maxlen - v[i].size(), ' ') + v[i] +
+                          " *");
+        }
     }
 
     // write the bottom border
