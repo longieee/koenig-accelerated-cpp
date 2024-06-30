@@ -1,96 +1,173 @@
 #include "../header/PermutationIndex.h"
 
 #include <algorithm>
+#include <gtest/gtest.h>
 #include <iostream>
+#include <sstream>
 #include <vector>
 
-using std::cin;
-using std::cout;
-using std::endl;
-using std::istream;
+using std::istringstream;
 using std::sort;
 using std::string;
 using std::vector;
 
-void printline(const vector<string>& s, bool print_separator = false)
+istringstream INPUT("the quick brown fox\njumps over the lazy dog");
+// Read raw page to string vector
+vector<string> page = read_page(INPUT);
+// Read the string vector to Line objects
+vector<Line> lines = split_raw_page(page);
+// Read Line objects to permutation objects
+vector<WordPermutation> permutations_from_line1 = create_permutations(lines[0]),
+                        permutations_from_line2 = create_permutations(lines[1]);
+
+TEST(PermutationTest, BasicPageRead)
 {
-    vector<string>::const_iterator iter_line = s.begin();
-    while (iter_line != s.end())
-    {
-        cout << *iter_line;
-        if (print_separator)
-        {
-            cout << ", ";
-        }
-        else
-        {
-            cout << ' ';
-        }
-        iter_line++;
-    }
-    cout << endl;
+    vector<string> expected = {"the quick brown fox",
+                               "jumps over the lazy dog"};
+    EXPECT_EQ(page, expected);
+};
+
+TEST(PermutationTest, LineRead)
+{
+    Line line1 = {{"the", "quick", "brown", "fox"}, 1},
+         line2 = {{"jumps", "over", "the", "lazy", "dog"}, 2};
+    vector<Line> expected = {line1, line2};
+
+    EXPECT_EQ(expected, lines);
 }
 
-int main()
+TEST(PermutationTest, CreatePermutation)
 {
-    vector<string> page;
-    vector<Line> lines;
-    vector<WordPermutation> permutations;
+    vector<WordPermutation> expected_line1 =
+                                {
+                                    {{"the", "quick", "brown", "fox"},
+                                     "the",
+                                     1,
+                                     1,
+                                     {},
+                                     {"quick", "brown", "fox"}},
+                                    {{"quick", "brown", "fox", "the"},
+                                     "quick",
+                                     1,
+                                     2,
+                                     {"the"},
+                                     {"brown", "fox"}},
+                                    {{"brown", "fox", "the", "quick"},
+                                     "brown",
+                                     1,
+                                     3,
+                                     {"the", "quick"},
+                                     {"fox"}},
+                                    {{"fox", "the", "quick", "brown"},
+                                     "fox",
+                                     1,
+                                     4,
+                                     {"the", "quick", "brown"},
+                                     {}},
+                                },
+                            expected_line2 = {
+                                {{"jumps", "over", "the", "lazy", "dog"},
+                                 "jumps",
+                                 2,
+                                 1,
+                                 {},
+                                 {"over", "the", "lazy", "dog"}},
+                                {{"over", "the", "lazy", "dog", "jumps"},
+                                 "over",
+                                 2,
+                                 2,
+                                 {"jumps"},
+                                 {"the", "lazy", "dog"}},
+                                {{"the", "lazy", "dog", "jumps", "over"},
+                                 "the",
+                                 2,
+                                 3,
+                                 {"jumps", "over"},
+                                 {"lazy", "dog"}},
+                                {{"lazy", "dog", "jumps", "over", "the"},
+                                 "lazy",
+                                 2,
+                                 4,
+                                 {"jumps", "over", "the"},
+                                 {"dog"}},
+                                {{"dog", "jumps", "over", "the", "lazy"},
+                                 "dog",
+                                 2,
+                                 5,
+                                 {"jumps", "over", "the", "lazy"},
+                                 {}}};
 
-    cout << "Page content:" << endl;
-    page = read_page(cin);
-    lines = split_raw_page(page);
+    EXPECT_EQ(expected_line1, permutations_from_line1);
+    EXPECT_EQ(expected_line2, permutations_from_line2);
+}
 
-    vector<Line>::iterator iter_lines = lines.begin();
+TEST(PermutationTest, SortPermutation)
+{
+    vector<WordPermutation> all_permutations(permutations_from_line1.begin(),
+                                             permutations_from_line1.end());
 
-    // Print out the raw strings read as Line objects
-    while (iter_lines != lines.end())
-    {
+    all_permutations.insert(all_permutations.end(),
+                            permutations_from_line2.begin(),
+                            permutations_from_line2.end());
 
-        cout << "Line number " << iter_lines->line_number << ": ";
-        printline(iter_lines->text, true);
-        iter_lines++;
-    }
+    sort(all_permutations.begin(), all_permutations.end(), compare);
 
-    // Print out permutation indexes
-    cout << "Permutations: " << endl;
-    iter_lines = lines.begin();
-    while (iter_lines != lines.end())
-    {
-        permutations = create_permutations(*iter_lines);
-        cout << "Line number " << iter_lines->line_number << ": " << endl;
-        vector<WordPermutation>::iterator iter_perm = permutations.begin();
-        while (iter_perm != permutations.end())
-        {
-            printline(iter_perm->text);
-            cout << iter_perm->index_word << endl;
-            iter_perm++;
-        }
-        iter_lines++;
-    }
+    vector<WordPermutation> expected = {
+        {{"brown", "fox", "the", "quick"},
+         "brown",
+         1,
+         3,
+         {"the", "quick"},
+         {"fox"}},
+        {{"dog", "jumps", "over", "the", "lazy"},
+         "dog",
+         2,
+         5,
+         {"jumps", "over", "the", "lazy"},
+         {}},
+        {{"fox", "the", "quick", "brown"},
+         "fox",
+         1,
+         4,
+         {"the", "quick", "brown"},
+         {}},
+        {{"jumps", "over", "the", "lazy", "dog"},
+         "jumps",
+         2,
+         1,
+         {},
+         {"over", "the", "lazy", "dog"}},
+        {{"lazy", "dog", "jumps", "over", "the"},
+         "lazy",
+         2,
+         4,
+         {"jumps", "over", "the"},
+         {"dog"}},
+        {{"over", "the", "lazy", "dog", "jumps"},
+         "over",
+         2,
+         2,
+         {"jumps"},
+         {"the", "lazy", "dog"}},
+        {{"quick", "brown", "fox", "the"},
+         "quick",
+         1,
+         2,
+         {"the"},
+         {"brown", "fox"}},
+        {{"the", "quick", "brown", "fox"},
+         "the",
+         1,
+         1,
+         {},
+         {"quick", "brown", "fox"}},
+        {{"the", "lazy", "dog", "jumps", "over"},
+         "the",
+         2,
+         3,
+         {"jumps", "over"},
+         {"lazy", "dog"}},
+    };
 
-    // Print out sorted permutation indexes
-    cout << endl;
-    cout << "Sorted:" << endl;
-    iter_lines = lines.begin();
-    while (iter_lines != lines.end())
-    {
-        sort(permutations.begin(), permutations.end(), compare);
-        cout << "Line number " << iter_lines->line_number << ": " << endl;
-        vector<WordPermutation>::iterator iter_perm = permutations.begin();
-        while (iter_perm != permutations.end())
-        {
-            cout << "Left: ";
-            printline(iter_perm->left_text, false);
-            cout << "Index: ";
-            cout << iter_perm->index_word << endl;
-            cout << "Right: ";
-            printline(iter_perm->right_text, false);
-            cout << "-------" << endl;
-            iter_perm++;
-        }
-        iter_lines++;
-    }
-
-    return 0;
+    ASSERT_EQ(expected, all_permutations);
 }
