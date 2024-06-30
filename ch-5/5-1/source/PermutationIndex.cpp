@@ -4,6 +4,7 @@
  */
 
 #include "../header/PermutationIndex.h"
+#include "../header/frame.h"
 #include "../header/split.h"
 
 #include <istream>
@@ -13,7 +14,9 @@
 using std::getline;
 using std::istream;
 using std::min;
+using std::max;
 using std::string;
+using std::to_string;
 using std::vector;
 
 /**
@@ -109,12 +112,14 @@ vector<WordPermutation> create_permutations(const Line& line)
         perm.text = rotate(line.text, rotation_idx);
         perm.index_word = perm.text[0];
         perm.line_number = line.line_number;
-        perm.word_number = rotation_idx;
+        perm.word_number = rotation_idx + 1;
 
         // Get the surrounding texts of the index_word
-        perm.left_text = slice(line.text, 0, rotation_idx);
+
+        // If the texts are too long, crop it
+        perm.left_text = slice(line.text, max(0, rotation_idx - 5), rotation_idx);
         perm.right_text = slice(line.text, rotation_idx + 1,
-                                static_cast<int>(line.text.size()));
+                                min(rotation_idx + 6, static_cast<int>(line.text.size())));
 
         permutes.push_back(perm);
 
@@ -207,4 +212,51 @@ string read_column(const vector<string>& v)
     }
 
     return column_content;
+}
+
+PermutationTable
+create_permutation_table(const vector<WordPermutation>& permutations)
+{
+    vector<WordPermutation>::const_iterator iter = permutations.begin();
+    PermutationTable table;
+    vector<string> left_text_col, index_word_col, right_text_col, word_num_col,
+        word_line_col;
+    while (iter != permutations.end())
+    {
+        left_text_col.push_back(read_column(iter->left_text));
+        index_word_col.push_back(iter->index_word);
+        right_text_col.push_back(read_column(iter->right_text));
+        word_num_col.push_back(to_string(iter->word_number));
+        word_line_col.push_back(to_string(iter->line_number));
+        iter++;
+    }
+    // Create and insert headers into the texts to create the frame
+    vector<string> left_text_header = {" ", string(width(left_text_col), '*')},
+                   index_word_header = {"Index",
+                                        string(width(index_word_col), '*')},
+                   right_text_header = {" ",
+                                        string(width(right_text_col), '*')},
+                   word_num_header = {"Pos", string(3, '*')},
+                   word_line_header = {"Line", string(4, '*')};
+
+    // insert headers to the columns content
+    left_text_col.insert(left_text_col.begin(), left_text_header.begin(),
+                         left_text_header.end());
+    index_word_col.insert(index_word_col.begin(), index_word_header.begin(),
+                          index_word_header.end());
+    right_text_col.insert(right_text_col.begin(), right_text_header.begin(),
+                          right_text_header.end());
+    word_num_col.insert(word_num_col.begin(), word_num_header.begin(),
+                        word_num_header.end());
+    word_line_col.insert(word_line_col.begin(), word_line_header.begin(),
+                         word_line_header.end());
+
+    // frame creation
+    table.left_text_frame = frame(left_text_col, '*', "right", 4);
+    table.index_word_frame = frame(index_word_col, "left", 4);
+    table.right_text_frame = frame(right_text_col, '*', "left", 4);
+    table.word_num_frame = frame(word_num_col, "left", 2);
+    table.word_line_frame = frame(word_line_col, '*', "left", 2);
+
+    return table;
 }
