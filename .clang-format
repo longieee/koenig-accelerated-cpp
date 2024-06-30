@@ -1,7 +1,7 @@
 ---
 Language: Cpp
 BasedOnStyle:  LLVM
-AccessModifierOffset: -4 # -2
+AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
@@ -17,27 +17,27 @@ AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
 AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: false
-AlwaysBreakTemplateDeclarations: true # false
+AlwaysBreakTemplateDeclarations: true
 BinPackArguments: true
 BinPackParameters: true
 BraceWrapping:
-  AfterClass: true # false
-  AfterControlStatement: true # false
-  AfterEnum: true # false
-  AfterFunction: true # false
-  AfterNamespace: true # false
-  AfterObjCDeclaration: true # false
-  AfterStruct: true # false
-  AfterUnion: true # false
-  AfterExternBlock: true # false
-  BeforeCatch: true # false
-  BeforeElse: true # false
-  IndentBraces: true # false
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true 
+  BeforeCatch: true
+  BeforeElse: true
+  IndentBraces: true 
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Allman # Attach
+BreakBeforeBraces: Allman
 BreakBeforeInheritanceComma: false
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializersBeforeComma: false
@@ -68,9 +68,9 @@ IncludeCategories:
   - Regex: ".*"
     Priority: 1
 IncludeIsMainRegex: "(Test)?$"
-IndentCaseLabels: true # false
+IndentCaseLabels: true
 IndentPPDirectives: None
-IndentWidth: 4 #2
+IndentWidth: 4
 IndentWrappedFunctionNames: false
 JavaScriptQuotes: Leave
 JavaScriptWrapImports: true
@@ -89,7 +89,7 @@ PenaltyBreakFirstLessLess: 120
 PenaltyBreakString: 1000
 PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 60
-PointerAlignment: Left # Right
+PointerAlignment: Left
 ReflowComments: true
 SortIncludes: true
 SortUsingDeclarations: true
@@ -105,5 +105,5 @@ SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
 Standard: Auto
-TabWidth: 8
+TabWidth: 4
 UseTab: Never
